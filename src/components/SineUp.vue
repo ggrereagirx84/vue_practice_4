@@ -52,19 +52,20 @@ export default {
           },
         }
       ).then(response => {
+        this.$store.dispatch('createAcountData', response);
         console.log(response);
       }).catch(error => {
         console.log(error)
       });
     },
     changeUserName() {
-      this.$store.commit('changeUserName', this.userName);
+      this.$store.dispatch('changeUserName', this.userName);
     },
     changeMailAddress() {
-      this.$store.commit('changeMailAddress', this.mailAddress);
+      this.$store.dispatch('changeMailAddress', this.mailAddress);
     },
     changePassword() {
-      this.$store.commit('changePassword', this.password);
+      this.$store.dispatch('changePassword', this.password);
     },
   }
 }

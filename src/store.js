@@ -8,6 +8,7 @@ export default new Vuex.Store({
     userName: '',
     mailAddress: '',
     password: '',
+    accountData:[],
   },
   getters: {
     getUserName(state) {
@@ -30,5 +31,22 @@ export default new Vuex.Store({
     changePassword(store, password) {
       store.password = password;
     },
+    accountData(store, accountData) {
+      store.accountData = accountData;
+    }
+  },
+  actions: {
+    changeUserName({ commit }, userName) {
+      commit('changeUserName', userName);
+    },
+    changeMailAddress({ commit }, mailAddress) {
+      commit('changeMailAddress', mailAddress);
+    },
+    changePassword({ commit }, password) {
+      commit('changePassword', password);
+    },
+    createAcountData({ commit }, accountData) {
+      commit('accountData', accountData);
+    }
   }
 });
