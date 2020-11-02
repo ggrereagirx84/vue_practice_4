@@ -22,7 +22,21 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    createUserAccount(store, data) {
+    changeUserName(store, userName) {
+      store.userName = userName;
+    },
+    changeMailAddress(store, mailAddress) {
+      store.mailAddress = mailAddress;
+    },
+    changePassword(store, password) {
+      store.password = password;
+    },
+    createAccountData(store, response) {
+      store.accountData = response;
+    },
+  },
+  actions: {
+    createUserAccount({ commit }, data) {
       axios.post(
         "https://firestore.googleapis.com/v1/projects/vue-practice-4/databases/(default)/documents/users",
         {
@@ -39,25 +53,11 @@ export default new Vuex.Store({
           },
         }
       ).then(response => {
-        store.accountData = response;
+        commit('createAccountData', response);
         console.log(response);
       }).catch(error => {
         console.log(error)
       });
-    },
-    changeUserName(store, userName) {
-      store.userName = userName;
-    },
-    changeMailAddress(store, mailAddress) {
-      store.mailAddress = mailAddress;
-    },
-    changePassword(store, password) {
-      store.password = password;
-    },
-  },
-  actions: {
-    createUserAccount({ commit }, data) {
-      commit('createUserAccount', data);
     },
     changeUserName({ commit }, userName) {
       commit('changeUserName', userName);
