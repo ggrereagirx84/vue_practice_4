@@ -3,13 +3,39 @@
     <h1>新規登録画面</h1>
     <div>
       <fieldset>
-        <label>ユーザー名<input type="text" placeholder="userName" v-model="userName" @change="changeUserName"></label>
-        <label>メールアドレス<input type="text" placeholder="E-mail" v-model="mailAddress" @change="changeMailAddress"></label>
-        <label>パスワード<input type="text" placeholder="Password" v-model="password" @change="changePassword"></label>
+        <label>
+          ユーザー名
+          <input 
+            type="text" 
+            placeholder="userName" 
+            v-model="userAccountData.userName" 
+            @change="changeUserName"
+          >
+        </label>
+        <label>
+          メールアドレス
+          <input 
+            type="text" 
+            placeholder="E-mail" 
+            v-model="userAccountData.mailAddress" @change="changeMailAddress"
+          >
+        </label>
+        <label>
+          パスワード
+          <input 
+            type="text" 
+            placeholder="Password" 
+            v-model="userAccountData.password" 
+            @change="changePassword"
+          >
+        </label>
       </fieldset>
     </div>
 
-    <div class="button" @click="createUserAccount">
+    <div 
+      class="button" 
+      @click="createUserAccount"
+    >
       新規登録
     </div>
     <div class="swich">
@@ -25,47 +51,28 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
   data() {
     return {
-      userName: this.$store.getters.getUserName,
-      mailAddress: this.$store.getters.getMailAddress,
-      password: this.$store.getters.getPassword,
+      userAccountData: {
+        userName: this.$store.getters.getUserName,
+        mailAddress: this.$store.getters.getMailAddress,
+        password: this.$store.getters.getPassword,
+      },
     };
   },
   methods: {
     createUserAccount() {
-      axios.post(
-        "https://firestore.googleapis.com/v1/projects/vue-practice-4/databases/(default)/documents/users",
-        {
-          fields: {
-            userName: {
-              stringValue: this.userName
-            },
-            mailAddress: {
-              stringValue: this.mailAddress
-            },
-            password: {
-              stringValue: this.password
-            }
-          },
-        }
-      ).then(response => {
-        this.$store.dispatch('createAcountData', response);
-        console.log(response);
-      }).catch(error => {
-        console.log(error)
-      });
+      this.$store.dispatch('createUserAccount', this.userAccountData);
     },
     changeUserName() {
-      this.$store.dispatch('changeUserName', this.userName);
+      this.$store.dispatch('changeUserName', this.userAccountData.userName);
     },
     changeMailAddress() {
-      this.$store.dispatch('changeMailAddress', this.mailAddress);
+      this.$store.dispatch('changeMailAddress', this.userAccountData.mailAddress);
     },
     changePassword() {
-      this.$store.dispatch('changePassword', this.password);
+      this.$store.dispatch('changePassword', this.userAccountData.password);
     },
   }
 }
