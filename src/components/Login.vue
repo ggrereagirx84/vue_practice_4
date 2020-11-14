@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>新規登録画面</h1>
+    <h1>ログイン画面</h1>
     <div>
       <fieldset>
         <label>
@@ -34,15 +34,15 @@
 
     <div 
       class="button" 
-      @click="createUserAccount"
+      @click="loginUserAccount"
     >
-      新規登録
+      ログイン
     </div>
     <div 
       class="swich"
-      @click="toLogin"
+      @click="toSineUp"
     >
-      ログインはこちらから
+      新規登録はこちらから
     </div>
 
     <footer>
@@ -65,8 +65,8 @@ export default {
     };
   },
   methods: {
-    createUserAccount() {
-      this.$store.dispatch('createUserAccount', this.userAccountData);
+    loginUserAccount() {
+      this.$store.dispatch('loginUserAccount', this.userAccountData);
     },
     changeUserName() {
       this.$store.dispatch('changeUserName', this.userAccountData.userName);
@@ -77,8 +77,8 @@ export default {
     changePassword() {
       this.$store.dispatch('changePassword', this.userAccountData.password);
     },
-    toLogin() {
-      this.$router.push('Login');
+    toSineUp() {
+      this.$router.push('/');
     }
   }
 }

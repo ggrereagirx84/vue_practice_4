@@ -38,25 +38,28 @@ export default new Vuex.Store({
   actions: {
     createUserAccount({ commit }, data) {
       axios.post(
-        "https://firestore.googleapis.com/v1/projects/vue-practice-4/databases/(default)/documents/users",
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDP25oDFSsZ_PFGa1l79fdefNAfoO7NoRw",
         {
-          fields: {
-            userName: {
-              stringValue: data.userName
-            },
-            mailAddress: {
-              stringValue: data.mailAddress
-            },
-            password: {
-              stringValue: data.password
-            }
-          },
+          email: data.mailAddress,
+          password: data.password,
+          returnSecureToken: true
         }
       ).then(response => {
-        commit('createAccountData', response);
         console.log(response);
-      }).catch(error => {
-        console.log(error)
+        commit('createAccountData', response);
+      });
+    },
+    loginUserAccount({ commit }, data) {
+      axios.post(
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDP25oDFSsZ_PFGa1l79fdefNAfoO7NoRw",
+        {
+          email: data.mailAddress,
+          password: data.password,
+          returnSecureToken: true
+        }
+      ).then(response => {
+        console.log(response);
+        commit('createAccountData', response);
       });
     },
     changeUserName({ commit }, userName) {
