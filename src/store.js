@@ -45,7 +45,6 @@ export default new Vuex.Store({
           returnSecureToken: true
         }
       ).then(response => {
-        console.log(response);
         commit('createAccountData', response);
       });
     },
@@ -58,7 +57,6 @@ export default new Vuex.Store({
           returnSecureToken: true
         }
       ).then(response => {
-        console.log(response);
         commit('createAccountData', response);
       });
     },
