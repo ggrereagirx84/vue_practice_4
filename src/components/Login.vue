@@ -4,15 +4,6 @@
     <div>
       <fieldset>
         <label>
-          ユーザー名
-          <input 
-            type="text" 
-            placeholder="userName" 
-            v-model="userAccountData.userName" 
-            @change="changeUserName"
-          >
-        </label>
-        <label>
           メールアドレス
           <input 
             type="text" 

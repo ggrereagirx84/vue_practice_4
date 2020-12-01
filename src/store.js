@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from "axios";
+import firebase from './firebase';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -37,28 +37,12 @@ export default new Vuex.Store({
   },
   actions: {
     createUserAccount({ commit }, data) {
-      axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDP25oDFSsZ_PFGa1l79fdefNAfoO7NoRw",
-        {
-          email: data.mailAddress,
-          password: data.password,
-          returnSecureToken: true
-        }
-      ).then(response => {
-        commit('createAccountData', response);
-      });
-    },
-    loginUserAccount({ commit }, data) {
-      axios.post(
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDP25oDFSsZ_PFGa1l79fdefNAfoO7NoRw",
-        {
-          email: data.mailAddress,
-          password: data.password,
-          returnSecureToken: true
-        }
-      ).then(response => {
-        commit('createAccountData', response);
-      });
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(data.mailAddress, data.password)
+        .then(response => {
+          commit('createAccountData', response);
+        })
     },
     changeUserName({ commit }, userName) {
       commit('changeUserName', userName);
