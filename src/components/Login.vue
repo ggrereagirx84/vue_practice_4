@@ -8,7 +8,8 @@
           <input 
             type="text" 
             placeholder="E-mail" 
-            v-model="userAccountData.mailAddress" @change="changeMailAddress"
+            v-model="userAccountData.mailAddress" 
+            @change="changeMailAddress"
           >
         </label>
         <label>
@@ -49,7 +50,6 @@ export default {
   data() {
     return {
       userAccountData: {
-        userName: this.$store.getters.getUserName,
         mailAddress: this.$store.getters.getMailAddress,
         password: this.$store.getters.getPassword,
       },
@@ -57,7 +57,10 @@ export default {
   },
   methods: {
     loginUserAccount() {
-      this.$store.dispatch('loginUserAccount', this.userAccountData);
+      this.$store.dispatch('loginUserAccount',  {
+        email: this.userAccountData.mailAddress,
+        password: this.userAccountData.password
+      });
     },
     changeUserName() {
       this.$store.dispatch('changeUserName', this.userAccountData.userName);
@@ -70,7 +73,7 @@ export default {
     },
     toSineUp() {
       this.$router.push('/');
-    }
+    },
   }
 }
 </script>

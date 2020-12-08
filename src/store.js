@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import firebase from './firebase';
+import firebase from 'firebase';
+import router from '@/router'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -42,8 +43,18 @@ export default new Vuex.Store({
         .createUserWithEmailAndPassword(data.mailAddress, data.password)
         .then(response => {
           commit('createAccountData', response);
+          router.push('/dashboard');
         })
     },
+    loginUserAccount({ commit }, { email, password }) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(response => {
+          commit('createAccountData', response);
+          router.push('/dashboard');
+        });
+      },
     changeUserName({ commit }, userName) {
       commit('changeUserName', userName);
     },

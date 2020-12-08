@@ -17,7 +17,8 @@
           <input 
             type="text" 
             placeholder="E-mail" 
-            v-model="userAccountData.mailAddress" @change="changeMailAddress"
+            v-model="userAccountData.mailAddress" 
+            @change="changeMailAddress"
           >
         </label>
         <label>
@@ -66,7 +67,7 @@ export default {
   },
   methods: {
     createUserAccount() {
-      this.$store.dispatch('createUserAccount', this.userAccountData);
+      this.$store.dispatch('createUserAccount',this.userAccountData);
     },
     changeUserName() {
       this.$store.dispatch('changeUserName', this.userAccountData.userName);
