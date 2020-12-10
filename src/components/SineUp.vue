@@ -9,7 +9,6 @@
             type="text" 
             placeholder="userName" 
             v-model="userAccountData.userName" 
-            @change="changeUserName"
           >
         </label>
         <label>
@@ -18,7 +17,6 @@
             type="text" 
             placeholder="E-mail" 
             v-model="userAccountData.mailAddress" 
-            @change="changeMailAddress"
           >
         </label>
         <label>
@@ -27,7 +25,6 @@
             type="text" 
             placeholder="Password" 
             v-model="userAccountData.password" 
-            @change="changePassword"
           >
         </label>
       </fieldset>
@@ -59,24 +56,22 @@ export default {
   data() {
     return {
       userAccountData: {
-        userName: this.$store.getters.getUserName,
-        mailAddress: this.$store.getters.getMailAddress,
-        password: this.$store.getters.getPassword,
+        userName: '',
+        mailAddress: '',
+        password: '',
       },
     };
   },
   methods: {
     createUserAccount() {
-      this.$store.dispatch('createUserAccount',this.userAccountData);
-    },
-    changeUserName() {
-      this.$store.dispatch('changeUserName', this.userAccountData.userName);
-    },
-    changeMailAddress() {
-      this.$store.dispatch('changeMailAddress', this.userAccountData.mailAddress);
-    },
-    changePassword() {
-      this.$store.dispatch('changePassword', this.userAccountData.password);
+      this.$store.dispatch('createUserAccount', {
+        userName: this.userAccountData.userName,
+        email: this.userAccountData.mailAddress,
+        password: this.userAccountData.password
+      });
+      this.userAccountData.userName = '';
+      this.userAccountData.mailAddress = '';
+      this.userAccountData.password = '';
     },
     toLogin() {
       this.$router.push('Login');

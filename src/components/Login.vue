@@ -9,7 +9,6 @@
             type="text" 
             placeholder="E-mail" 
             v-model="userAccountData.mailAddress" 
-            @change="changeMailAddress"
           >
         </label>
         <label>
@@ -18,7 +17,6 @@
             type="text" 
             placeholder="Password" 
             v-model="userAccountData.password" 
-            @change="changePassword"
           >
         </label>
       </fieldset>
@@ -50,8 +48,8 @@ export default {
   data() {
     return {
       userAccountData: {
-        mailAddress: this.$store.getters.getMailAddress,
-        password: this.$store.getters.getPassword,
+        mailAddress: '',
+        password: '',
       },
     };
   },
@@ -61,15 +59,8 @@ export default {
         email: this.userAccountData.mailAddress,
         password: this.userAccountData.password
       });
-    },
-    changeUserName() {
-      this.$store.dispatch('changeUserName', this.userAccountData.userName);
-    },
-    changeMailAddress() {
-      this.$store.dispatch('changeMailAddress', this.userAccountData.mailAddress);
-    },
-    changePassword() {
-      this.$store.dispatch('changePassword', this.userAccountData.password);
+      this.userAccountData.mailAddress = '';
+      this.userAccountData.password = '';
     },
     toSineUp() {
       this.$router.push('/');
