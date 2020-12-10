@@ -65,7 +65,6 @@ export default {
   methods: {
     createUserAccount() {
       this.$store.dispatch('createUserAccount', {
-        userName: this.userAccountData.userName,
         email: this.userAccountData.mailAddress,
         password: this.userAccountData.password
       });
