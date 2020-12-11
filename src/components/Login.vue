@@ -1,16 +1,8 @@
 <template>
   <div class="hello">
-    <h1>新規登録画面</h1>
+    <h1>ログイン画面</h1>
     <div>
       <fieldset>
-        <label>
-          ユーザー名
-          <input 
-            type="text" 
-            placeholder="userName" 
-            v-model="userAccountData.userName" 
-          >
-        </label>
         <label>
           メールアドレス
           <input 
@@ -32,15 +24,15 @@
 
     <div 
       class="button" 
-      @click="createUserAccount"
+      @click="loginUserAccount"
     >
-      新規登録
+      ログイン
     </div>
     <div 
       class="swich"
-      @click="toLogin"
+      @click="toSineUp"
     >
-      ログインはこちらから
+      新規登録はこちらから
     </div>
 
     <footer>
@@ -56,25 +48,23 @@ export default {
   data() {
     return {
       userAccountData: {
-        userName: '',
         mailAddress: '',
         password: '',
       },
     };
   },
   methods: {
-    createUserAccount() {
-      this.$store.dispatch('createUserAccount', {
+    loginUserAccount() {
+      this.$store.dispatch('loginUserAccount',  {
         email: this.userAccountData.mailAddress,
         password: this.userAccountData.password
       });
-      this.userAccountData.userName = '';
       this.userAccountData.mailAddress = '';
       this.userAccountData.password = '';
     },
-    toLogin() {
-      this.$router.push('Login');
-    }
+    toSineUp() {
+      this.$router.push('/');
+    },
   }
 }
 </script>
