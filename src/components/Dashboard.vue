@@ -1,17 +1,22 @@
 <template>
   <div class="hello">
+    <div id="user">
+      <div id="name">{{ loginUser.name }}さんようこそ</div>
+      <div id="wallet">残高: {{ loginUser.wallet }}</div>
+    </div>
     <h1>ユーザー一覧</h1>
     <table>
       <thead>
         <th>
           ユーザー名
         </th>
-        <th>
-        </th>
+        <th class="margin"></th>
+        <th></th>
       </thead>
       <tbody>
         <tr v-for="user in users" :key="user.index">
           <td>{{ user }}</td>
+          <td class="margin"></td>
           <td><button>walletを見る</button></td>
           <td><button>送る</button></td>
         </tr>
@@ -32,12 +37,42 @@ export default {
     return {
       users: [
         'test7','test2','test13','test12','aaa','test5','test','test3','userA'
-      ]
+      ],
+      loginUser: {
+        name: '',
+        email: '',
+        wallet: '',
+      }
     };
   },
-  methods: {
-    
-  }
+  computed: {
+    updateName() {
+      return this.$store.getters.getName;
+    },
+    updateEmail() {
+      return this.$store.getters.getEmail;
+    },
+    updateWallet() {
+      return this.$store.getters.getWallet;
+    },
+  },
+  watch: {
+    updateName() {
+      this.$nextTick(() => {
+        this.loginUser.name = this.$store.getters.getName;
+      });
+    },
+    updateEmail() {
+      this.$nextTick(() => {
+        this.loginUser.email = this.$store.getters.getEmail;
+      });
+    },
+    updateWallet() {
+      this.$nextTick(() => {
+        this.loginUser.wallet = this.$store.getters.getWallet;
+      });
+    },
+  },
 }
 </script>
 
@@ -90,4 +125,21 @@ footer > div {
   border-radius: 5px;
   color: #fff;
 }
+
+table {
+  margin: 0 auto;
+}
+.margin {
+  width: 300px;
+}
+#user {
+  display: flex;
+}
+#name {
+  margin: 0 auto 0 0;
+}
+#wallet {
+  margin: 0 0 0 auto;
+}
+
 </style>
