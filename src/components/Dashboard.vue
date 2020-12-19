@@ -1,8 +1,8 @@
 <template>
   <div class="hello">
     <div id="user">
-      <div id="name">{{ loginUser.name }}さんようこそ</div>
-      <div id="wallet">残高: {{ loginUser.wallet }}</div>
+      <div id="name">{{ loginUserName }}さんようこそ</div>
+      <div id="wallet">残高: {{ loginUserWallet }}</div>
     </div>
     <h1>ユーザー一覧</h1>
     <table>
@@ -38,39 +38,17 @@ export default {
       users: [
         'test7','test2','test13','test12','aaa','test5','test','test3','userA'
       ],
-      loginUser: {
-        name: '',
-        email: '',
-        wallet: '',
-      }
     };
   },
   computed: {
-    updateName() {
+    loginUserName() {
       return this.$store.getters.getName;
     },
-    updateEmail() {
+    loginUserEmail() {
       return this.$store.getters.getEmail;
     },
-    updateWallet() {
+    loginUserWallet() {
       return this.$store.getters.getWallet;
-    },
-  },
-  watch: {
-    updateName() {
-      this.$nextTick(() => {
-        this.loginUser.name = this.$store.getters.getName;
-      });
-    },
-    updateEmail() {
-      this.$nextTick(() => {
-        this.loginUser.email = this.$store.getters.getEmail;
-      });
-    },
-    updateWallet() {
-      this.$nextTick(() => {
-        this.loginUser.wallet = this.$store.getters.getWallet;
-      });
     },
   },
 }
