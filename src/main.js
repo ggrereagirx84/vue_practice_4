@@ -18,6 +18,8 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+store.dispatch('autoLogin');
+
 new Vue({
   router,
   store,

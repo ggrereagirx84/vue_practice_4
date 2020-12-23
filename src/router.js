@@ -3,6 +3,7 @@ import Router from "vue-router";
 import SineUp from "./components/SineUp";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
+import store from "./store";
 
 Vue.use(Router);
 
@@ -20,6 +21,13 @@ export default new Router({
     {
       path: '/dashboard',
       component: Dashboard,
+      beforeEnter(to, from, next) {
+        if(store.getters.getLoginUser) {
+          next();
+        } else {
+          next('/login');
+        }
+      }
     }
   ]
 });
