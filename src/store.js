@@ -78,7 +78,7 @@ export default new Vuex.Store({
         })
         .catch(() => {
           console.log('error');
-        })
+        });
     },
     fetchData({ commit }, uid) {
       firebase
@@ -88,6 +88,9 @@ export default new Vuex.Store({
           snapshot.forEach(doc => {
             commit('createAccountData',doc.data())
           });
+        })
+        .catch(() => {
+          console.log('error');
         });
     },
     logout({ commit }) {
