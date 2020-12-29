@@ -1,8 +1,13 @@
 <template>
   <div class="hello">
     <div id="user">
-      <div id="name">{{ loginUserName }}さんようこそ</div>
+      <div id="name">{{ loginUserName }}さんようこそ!!</div>
       <div id="wallet">残高: {{ loginUserWallet }}</div>
+      <div 
+        class="button" 
+        id="logout"
+        @click="logout"
+      >ログアウト</div>
     </div>
     <h1>ユーザー一覧</h1>
     <table>
@@ -17,8 +22,8 @@
         <tr v-for="user in users" :key="user.index">
           <td>{{ user }}</td>
           <td class="margin"></td>
-          <td><button>walletを見る</button></td>
-          <td><button>送る</button></td>
+          <td><div class="button" id="checkWallet">walletを見る</div></td>
+          <td><div class="button" id="send">送る</div></td>
         </tr>
       </tbody>
     </table>
@@ -51,6 +56,11 @@ export default {
       return this.$store.getters.getWallet;
     },
   },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout');
+    }
+  }
 }
 </script>
 
@@ -70,20 +80,27 @@ label {
 }
 
 .button {
-  border: solid 2px rgb(84, 183, 223);
-  width: 100px;
-  height: 50px;
   border-radius: 5px;
-  margin: 20px auto 0;
-  line-height: 50px;
-  color: rgb(84, 183, 223);
+  line-height: 30px;
   cursor: pointer;
 }
 
-.button:hover {
+#logout {
+  border: solid 2px rgb(84, 183, 223);
+  border-radius: 5px;
+  color: rgb(84, 183, 223);
+  cursor: pointer;
+}
+#logout:hover {
   color: #fff;
   background: rgb(84, 183, 223);
 }
+
+#checkWallet, #send {
+  background: rgb(21, 178, 184);
+  color: #fff;
+}
+
 
 .swich {
   color: rgb(84, 183, 223);
