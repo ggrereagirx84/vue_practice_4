@@ -29,7 +29,10 @@ export default new Vuex.Store({
     },
     updateLoginUser(state, uid) {
       state.loginUser = uid;
-    }
+    },
+    test(state, doc) {
+      console.log(doc);
+    },
   },
   actions: {
     autoLogin({ commit }) {
@@ -70,7 +73,6 @@ export default new Vuex.Store({
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(response => {
-          console.log(response);
           localStorage.setItem('uid', response.user.uid);
           commit('updateLoginUser', response.user.uid);
           this.dispatch('fetchData', response.user.uid);
@@ -86,8 +88,10 @@ export default new Vuex.Store({
         .collection(`users/${uid}/data`).get()
         .then(snapshot => {
           snapshot.forEach(doc => {
-            commit('createAccountData',doc.data())
+            commit('createAccountData',doc.data());
+            this.dispatch('testfetch');
           });
+          commit('test', snapshot);
         })
         .catch(() => {
           console.log('error');
@@ -97,6 +101,21 @@ export default new Vuex.Store({
       commit('updateLoginUser', null);
       localStorage.removeItem('uid');
       router.push('/login');
+    },
+    testfetch({ commit }) {
+      firebase
+        .firestore()
+        .collection("users").get()
+        .then(users => {
+          const uids = [];
+          users.forEach(user => {
+            uids.push(user);
+          });
+          commit('test', uids);
+        })
+        .catch(() => {
+          console.log('error');
+        });
     }
   }
 });
