@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loginUser: '',
-    accountData:[]
+    accountData:[],
+    users:[]
   },
   getters: {
     getName(state) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     getLoginUser(state) {
       return state.loginUser;
+    },
+    getUsers(state) {
+      return state.users;
     }
   },
   mutations: {
@@ -30,9 +34,23 @@ export default new Vuex.Store({
     updateLoginUser(state, uid) {
       state.loginUser = uid;
     },
-    test(state, doc) {
-      console.log(doc);
+    updateUsers(state, snapshot) {
+      const users = [];
+      snapshot.forEach(doc => {
+        let user = doc.data();
+        user["uid"] = doc.id;
+        users.push(user);
+      });
+      state.users = users;
     },
+    updateAccountData(state, uid) {
+      state.users.forEach((user, index) => {
+        if(user.uid === uid) {
+          state.accountData = state.users.splice(index, 1)[0];
+          return true;
+        }
+      });
+    }
   },
   actions: {
     autoLogin({ commit }) {
@@ -52,8 +70,8 @@ export default new Vuex.Store({
         .createUserWithEmailAndPassword(email, password)
         .then(response => {
           firebase
-            .firestore().collection(`users/${response.user.uid}/data`)
-            .add(userData)
+            .firestore().collection("users").doc(response.user.uid)
+            .set(userData)
             .then(() => {
               localStorage.setItem('uid', response.user.uid);
               commit('updateLoginUser', response.user.uid);
@@ -85,13 +103,10 @@ export default new Vuex.Store({
     fetchData({ commit }, uid) {
       firebase
         .firestore()
-        .collection(`users/${uid}/data`).get()
+        .collection("users").get()
         .then(snapshot => {
-          snapshot.forEach(doc => {
-            commit('createAccountData',doc.data());
-            this.dispatch('testfetch');
-          });
-          commit('test', snapshot);
+          commit('updateUsers', snapshot);
+          commit('updateAccountData', uid);
         })
         .catch(() => {
           console.log('error');
@@ -102,20 +117,5 @@ export default new Vuex.Store({
       localStorage.removeItem('uid');
       router.push('/login');
     },
-    testfetch({ commit }) {
-      firebase
-        .firestore()
-        .collection("users").get()
-        .then(users => {
-          const uids = [];
-          users.forEach(user => {
-            uids.push(user);
-          });
-          commit('test', uids);
-        })
-        .catch(() => {
-          console.log('error');
-        });
-    }
   }
 });
