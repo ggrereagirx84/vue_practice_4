@@ -7,7 +7,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loginUser: '',
-    accountData:[]
+    accountData:[],
+    users:[]
   },
   getters: {
     getName(state) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     getLoginUser(state) {
       return state.loginUser;
+    },
+    getUsers(state) {
+      return state.users;
     }
   },
   mutations: {
@@ -29,6 +33,23 @@ export default new Vuex.Store({
     },
     updateLoginUser(state, uid) {
       state.loginUser = uid;
+    },
+    updateUsers(state, snapshot) {
+      const users = [];
+      snapshot.forEach(doc => {
+        let user = doc.data();
+        user["uid"] = doc.id;
+        users.push(user);
+      });
+      state.users = users;
+    },
+    updateAccountData(state, uid) {
+      state.users.forEach((user, index) => {
+        if(user.uid === uid) {
+          state.accountData = state.users.splice(index, 1)[0];
+          return true;
+        }
+      });
     }
   },
   actions: {
@@ -49,8 +70,8 @@ export default new Vuex.Store({
         .createUserWithEmailAndPassword(email, password)
         .then(response => {
           firebase
-            .firestore().collection(`users/${response.user.uid}/data`)
-            .add(userData)
+            .firestore().collection("users").doc(response.user.uid)
+            .set(userData)
             .then(() => {
               localStorage.setItem('uid', response.user.uid);
               commit('updateLoginUser', response.user.uid);
@@ -70,7 +91,6 @@ export default new Vuex.Store({
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(response => {
-          console.log(response);
           localStorage.setItem('uid', response.user.uid);
           commit('updateLoginUser', response.user.uid);
           this.dispatch('fetchData', response.user.uid);
@@ -83,11 +103,10 @@ export default new Vuex.Store({
     fetchData({ commit }, uid) {
       firebase
         .firestore()
-        .collection(`users/${uid}/data`).get()
+        .collection('users').get()
         .then(snapshot => {
-          snapshot.forEach(doc => {
-            commit('createAccountData',doc.data())
-          });
+          commit('updateUsers', snapshot);
+          commit('updateAccountData', uid);
         })
         .catch(() => {
           console.log('error');
@@ -97,6 +116,6 @@ export default new Vuex.Store({
       commit('updateLoginUser', null);
       localStorage.removeItem('uid');
       router.push('/login');
-    }
+    },
   }
 });
