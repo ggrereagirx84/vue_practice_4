@@ -103,7 +103,7 @@ export default new Vuex.Store({
     fetchData({ commit }, uid) {
       firebase
         .firestore()
-        .collection("users").get()
+        .collection('users').get()
         .then(snapshot => {
           commit('updateUsers', snapshot);
           commit('updateAccountData', uid);
