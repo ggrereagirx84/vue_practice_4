@@ -11,9 +11,10 @@
     </div>
     <h1>ユーザー一覧</h1>
     <div 
-      v-if="modal"
+      v-if="mask"
       id="mask" 
       class="hidden"
+      @click="closeModal"
     ></div>
     <table>
       <thead>
@@ -28,29 +29,55 @@
           <td>{{ user.name }}</td>
           <td class="margin"></td>
           <td><div 
-            @click="showModal(user.name, user.wallet)"
             class="button" 
             id="checkWallet"
+            @click="showWalletModal(user)"
           >walletを見る</div></td>
-          <td><div class="button" id="send">送る</div></td>
+          <td><div 
+            class="button" 
+            id="send"
+            @click="showSendModal(user)"
+          >送る</div></td>
         </tr>
       </tbody>
     </table>
 
     <section 
-      v-if="modal"
-      id="modal" 
-      class="hidden"
+      v-if="walletModal"
+      id="walletModal" 
+      class="hidden modal"
     >
-      <div id="modalBody">
+      <div class="modalBody">
         <h1>{{ clickUserName }}さんの残高</h1>
         <p>{{ clickUserWallet }}</p>
       </div>
-      <div id="modalFootter">
+      <div class="modalFootter">
         <div 
+          class="close"
           @click="closeModal"
-          id="close"
         >close</div>
+      </div>
+    </section>
+
+    <section 
+      v-if="sendModal"
+      id="sendModal" 
+      class="hidden modal"
+    >
+      <div class="modalBody">
+        <h1>あなたの残高:{{ clickUserWallet }}</h1>
+        <h2>送る金額</h2>
+        <input 
+          type="test"
+          v-model="amount"
+        >
+        <div id=sendError>{{ sendError }}</div>
+      </div>
+      <div class="modalFootter">
+        <div 
+          @click="sendMoney"
+          class="send"
+        >送信</div>
       </div>
     </section>
 
@@ -66,39 +93,72 @@
 export default {
   data() {
     return {
-      modal: false,
+      walletModal: false,
+      sendModal: false,
+      mask: false,
       clickUserName: '',
-      clickUserWallet: ''
+      clickUserWallet: 0,
+      clickUserId: '',
+      amount:''
     };
   },
   computed: {
     loginUserName() {
-      return this.$store.getters.getName;
-    },
-    loginUserEmail() {
-      return this.$store.getters.getEmail;
+      return this.$store.getters.loginUserName;
     },
     loginUserWallet() {
-      return this.$store.getters.getWallet;
+      return this.$store.getters.loginUserWallet;
     },
     users() {
-      return this.$store.getters.getUsers;
+      return this.$store.getters.users;
+    },
+    sendError() {
+      return this.$store.getters.sendError;
     }
   },
   methods: {
     logout() {
       this.$store.dispatch('logout');
     },
-    showModal(name, wallet) {
-      this.clickUserName = name;
-      this.clickUserWallet = wallet;
-      this.modal = true;
+    showWalletModal(user) {
+      this.clickUserName = user.name;
+      this.clickUserWallet = user.wallet;
+      this.clickUserId = user.uid;
+      this.walletModal = true;
+      this.mask = true;
     },
     closeModal() {
       this.clickUserName = '';
       this.clickUserWallet = '';
-      this.modal = false;
-    }
+      if(this.walletModal) {
+        this.walletModal = false;
+      } else if(this.sendModal) {
+        this.sendModal = false;
+      }
+      this.mask = false;
+    },
+    showSendModal(user) {
+      this.clickUserName = user.name;
+      this.clickUserWallet = user.wallet;
+      this.clickUserId = user.uid;
+      this.sendModal = true;
+      this.mask = true;
+    },
+    sendMoney() {
+      if(this.loginUserWallet > this.amount) {
+        this.$store.dispatch('sendMoney', {
+          uid: this.clickUserId,
+          clickUserWallet: this.clickUserWallet, 
+          amount: this.amount
+        });
+        this.clickUserName = '';
+        this.clickUserWallet = '';
+        this.sendModal = false;
+        this.mask = false;
+      } else {
+        this.$store.dispatch('sendError');
+      }
+    },
   }
 }
 </script>
@@ -186,10 +246,8 @@ table {
   left: 0;
 }
 
-#modal {
+.modal {
   background: #fff;
-  width: 200px;
-  height: 150px;
   padding: 0;
   position: fixed;
   border-radius: 5px;
@@ -202,7 +260,21 @@ table {
   flex-direction: column;
 }
 
-#modalBody > h1, p {
+#walletModal {
+  width: 200px;
+  height: 150px;
+}
+
+#sendModal {
+  width: 300px;
+  height: 190px;
+}
+
+#sendModal > .modalFootter {
+  margin-top: 5px;
+}
+
+.modalBody > h1, h2, p {
   margin: 0;
   height: 50px;
   line-height: 50px;
@@ -210,17 +282,17 @@ table {
   border-radius: 5px;
 }
 
-#modalBody > p {
+.modalBody > p {
   font-size: 24px;
 } 
 
-#modalFootter {
+.modalFootter {
   height: 50px;
   background: #ddd;
   border-radius: 5px;
 }
 
-#close {
+.close, .send {
   font-size: 16px;
   color: #fff;
   background: red;
@@ -230,6 +302,11 @@ table {
   margin: 10px auto 10px 130px;
   border-radius: 5px;
   cursor: pointer;
+}
+
+#sendError {
+  height: 20px;
+  color: red;
 }
 
 </style>

@@ -22,7 +22,7 @@ export default new Router({
       path: '/dashboard',
       component: Dashboard,
       beforeEnter(to, from, next) {
-        if(store.getters.getLoginUser) {
+        if(store.getters.token) {
           next();
         } else {
           next('/login');
