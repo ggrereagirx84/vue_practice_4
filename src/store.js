@@ -138,35 +138,31 @@ export default new Vuex.Store({
           console.log('error');
         });
     },
-    sendMoney({ commit, state }, {uid, clickUserWallet, amount}) {
-      const newLoginUserWallet = state.loginUser.wallet - amount;
-      const newClickUserWallet = Number(clickUserWallet) + Number(amount);
-      firebase
-        .firestore().collection('users').doc(state.loginUser.uid)
-        .set({
-          wallet: newLoginUserWallet
-        }, {merge: true})
-        .then(() => {
-          firebase
-            .firestore().collection('users').doc(uid)
-            .set({
-              wallet: newClickUserWallet
-            }, {merge: true})
-            .then(() => {
-              commit('updateWallet', {
-                clickUserId: uid,
-                loginUserWallet: newLoginUserWallet,
-                clickUserWallet: newClickUserWallet
-              });
-              console.log(state.users)
-            })
-            .catch(() => {
-              console.log('error');
-            });
-        })
-        .catch(() => {
-          console.log('error');
+    sendMoney({ commit, state }, {uid, amount}) {
+      const loginUserRef = firebase.firestore().collection('users').doc(state.loginUser.uid);
+      const recipientRef = firebase.firestore().collection('users').doc(uid);
+      firebase.firestore().runTransaction(async transaction =>{
+        const loginUser = await transaction.get(loginUserRef);
+        const recipient = await transaction.get(recipientRef);
+        const newLoginUserWallet = loginUser.data().wallet - amount;
+        const newRecipientWallet = Number(recipient.data().wallet) + Number(amount);
+        transaction.set(loginUserRef,
+          {wallet: newLoginUserWallet},
+          {merge: true}
+        )
+        transaction.set(recipientRef,
+          {wallet: newRecipientWallet},
+          {merge: true}
+        )
+        commit('updateWallet', {
+          clickUserId: uid,
+          loginUserWallet: newLoginUserWallet,
+          clickUserWallet: newRecipientWallet
         });
+      })
+      .catch(() => {  
+        console.log('error');
+      });
     },
     sendError({ commit }) {
       commit('sendError');

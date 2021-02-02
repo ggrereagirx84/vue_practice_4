@@ -65,10 +65,9 @@
       class="hidden modal"
     >
       <div class="modalBody">
-        <h1>あなたの残高:{{ clickUserWallet }}</h1>
+        <h1>あなたの残高:{{ loginUserWallet }}</h1>
         <h2>送る金額</h2>
         <input 
-          type="test"
           v-model="amount"
         >
         <div id=sendError>{{ sendError }}</div>
@@ -136,6 +135,7 @@ export default {
         this.sendModal = false;
       }
       this.mask = false;
+      this.amount = '';
     },
     showSendModal(user) {
       this.clickUserName = user.name;
@@ -148,11 +148,11 @@ export default {
       if(this.loginUserWallet > this.amount) {
         this.$store.dispatch('sendMoney', {
           uid: this.clickUserId,
-          clickUserWallet: this.clickUserWallet, 
           amount: this.amount
         });
         this.clickUserName = '';
         this.clickUserWallet = '';
+        this.amount = '';
         this.sendModal = false;
         this.mask = false;
       } else {
