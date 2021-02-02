@@ -20,6 +20,7 @@
           >
         </label>
       </fieldset>
+      <div id="loginError">{{ loginError }}</div>
     </div>
 
     <div 
@@ -52,6 +53,11 @@ export default {
         password: '',
       },
     };
+  },
+  computed: {
+    loginError() {
+      return this.$store.getters.loginError;
+    }
   },
   methods: {
     loginUserAccount() {
@@ -101,6 +107,7 @@ label {
 }
 
 .swich {
+  display: inline-block;
   color: rgb(84, 183, 223);
   cursor: pointer;
 }
@@ -117,5 +124,9 @@ footer > div {
   height: 20px;
   border-radius: 5px;
   color: #fff;
+}
+
+#loginError {
+  color: red;
 }
 </style>

@@ -112,6 +112,7 @@ label {
 }
 
 .swich {
+  display: inline-block;
   color: rgb(84, 183, 223);
   cursor: pointer;
 }
